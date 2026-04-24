@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>BizPro</title>
+
+<!-- ══ PWA: iOS ══════════════════════════════════ -->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="BizPro" />
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%23080808'/><text x='256' y='340' font-size='320' text-anchor='middle' font-family='Georgia,serif' fill='%23C9A84C'>B</text></svg>" />
+
+<!-- ══ PWA: Android / Desktop ════════════════════ -->
+<meta name="theme-color" content="#080808" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="description" content="Company Profile · Brochure · Business Card" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root{--gold:#C9A84C;--goldl:#E4C870;--bg:#080808;--card:#101010;--card2:#181818;--border:rgba(201,168,76,.18);--text:#EAE4D8;--muted:#666;--dim:#3a3a3a;--red:#E05555}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;-webkit-tap-highlight-color:transparent}
+.df{font-family:'Cormorant Garamond',serif}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:#0a0a0a}::-webkit-scrollbar-thumb{background:rgba(201,168,76,.35);border-radius:2px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(14px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:none}}
+.fu{animation:fadeUp .5s ease both}.fu1{animation:fadeUp .5s .1s ease both}.fu2{animation:fadeUp .5s .2s ease both}
+.view{display:none}.view.active{display:block}
+.tab{display:none}.tab.active{display:block}
+/* Header */
+.hdr{background:rgba(8,8,8,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50}
+.hdr-in{max-width:1100px;margin:0 auto;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;gap:12px}
+.logo{font-family:'Cormorant Garamond',serif;font-size:22px;letter-spacing:1px;cursor:pointer}
+.logo .g{color:var(--gold)}.logo .w{color:var(--text);font-weight:300}
+.nav{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.nbtn{background:transparent;color:var(--muted);border:1px solid transparent;border-radius:8px;padding:7px 14px;font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.nbtn.on{background:rgba(201,168,76,.1);color:var(--gold);border-color:rgba(201,168,76,.22)}
+.nbtn:hover:not(.on){color:var(--text)}
+.nsep{width:1px;height:20px;background:var(--border);margin:0 6px;flex-shrink:0}
+.ubadge{display:flex;align-items:center;gap:8px;padding:5px 12px;background:var(--card);border:1px solid var(--border);border-radius:100px}
+.uav{width:28px;height:28px;background:rgba(201,168,76,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--gold);flex-shrink:0}
+.uav.lg{width:44px;height:44px;font-size:16px}
+/* Install banner */
+#install-banner{background:linear-gradient(135deg,#1a1400,#0e0e00);border-bottom:1px solid rgba(201,168,76,.3);padding:10px 24px;display:none;align-items:center;justify-content:space-between;gap:12px;animation:slideDown .4s ease}
+#install-banner.show{display:flex}
+/* Buttons */
+.btn{border-radius:10px;padding:10px 20px;font-family:'Outfit',sans-serif;font-weight:500;font-size:13px;cursor:pointer;border:none;white-space:nowrap;transition:opacity .2s}
+.btn-g{background:linear-gradient(135deg,var(--gold),var(--goldl),var(--gold));background-size:200%;color:#000;font-weight:600}
+.btn-g:hover{opacity:.88}.btn-g:disabled{opacity:.4;cursor:not-allowed}
+.btn-gh{background:transparent;color:var(--gold);border:1px solid var(--border);border-radius:10px;padding:9px 18px;font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer}
+.btn-gh:hover{border-color:var(--gold)}
+.btn-ic{background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:8px 13px;font-family:'Outfit',sans-serif;cursor:pointer;font-size:14px}
+.btn-ic:hover{color:var(--gold);border-color:var(--gold)}
+.btn-r{background:transparent;color:var(--red);border:1px solid rgba(224,85,85,.3);font-family:'Outfit',sans-serif;border-radius:10px;padding:9px 18px;font-size:13px;cursor:pointer}
+.btn-txt{background:none;border:none;cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px}
+/* Card */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;transition:border-color .3s,transform .3s,box-shadow .3s}
+.card:hover{border-color:rgba(201,168,76,.45);transform:translateY(-3px);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+/* Auth */
+.auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.auth-box{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:44px 36px;max-width:420px;width:100%}
+.fg{margin-bottom:14px}
+.flabel{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+.finput{width:100%;background:#1a1a1a;border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;outline:none;transition:border-color .2s}
+.finput:focus{border-color:var(--gold)}.finput::placeholder{color:var(--dim)}
+.ferr{color:var(--red);font-size:12px;margin-bottom:10px;display:none}
+/* Upload */
+.uzone{border:2px dashed var(--border);border-radius:12px;padding:28px 20px;text-align:center;cursor:pointer;transition:all .3s;display:block}
+.uzone:hover,.uzone.dov{border-color:var(--gold);background:rgba(201,168,76,.03)}
+/* Progress */
+.ptrack{background:var(--card2);border-radius:4px;height:4px;overflow:hidden}
+.pbar{height:100%;background:linear-gradient(90deg,var(--gold),var(--goldl));border-radius:4px;transition:width .3s ease}
+/* Thumb */
+.thumb{border-radius:10px;overflow:hidden;background:var(--card2);height:190px;display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:18px}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.tbadge{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);border-radius:6px;padding:3px 9px;font-size:10px;color:var(--gold);letter-spacing:1px;text-transform:uppercase}
+/* Misc */
+.fbar{background:#1a1a1a;border-radius:10px;padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.fext{font-size:10px;color:var(--gold);background:rgba(201,168,76,.1);padding:3px 10px;border-radius:20px;letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
+.lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:4px}
+.div{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:20px 0}
+/* Modal */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.9);backdrop-filter:blur(14px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.mo.open{display:flex}
+.mbox{background:var(--card);border:1px solid var(--border);border-radius:20px;width:95%;max-width:960px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
+.mbox-sm{max-width:440px;border-radius:24px;padding:36px 32px;overflow-y:auto}
+.mhdr{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.mbody{flex:1;overflow:auto;padding:24px;display:flex;align-items:center;justify-content:center}
+.mc{background:none;border:none;color:var(--muted);cursor:pointer;font-size:22px;line-height:1}
+/* Role badge */
+.rb{font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:20px;font-weight:600}
+.rb.admin{background:rgba(201,168,76,.15);color:var(--gold)}.rb.user{background:rgba(100,170,100,.12);color:#88cc88}
+/* Toast */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);padding:11px 26px;border-radius:100px;font-size:13px;font-weight:500;z-index:9999;white-space:nowrap;box-shadow:0 8px 40px rgba(0,0,0,.8);animation:toastIn .3s ease;display:none}
+.toast.ok{background:#191500;border:1px solid var(--gold);color:var(--gold)}.toast.err{background:#2a0d0d;border:1px solid var(--red);color:var(--red)}.toast.show{display:block}
+/* Spinner */
+.spin{width:30px;height:30px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
+/* Layout */
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+.wrap-md{max-width:860px;margin:0 auto;padding:0 24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
+.hero{text-align:center;padding:60px 0 68px}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(46px,7vw,86px);font-weight:300;line-height:1.06;margin-bottom:18px}
+.hero-line{height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);max-width:130px;margin:0 auto 24px}
+.hero p{color:var(--muted);font-size:15px;line-height:1.85;max-width:380px;margin:0 auto}
+footer{border-top:1px solid var(--border);padding:36px 24px;text-align:center;margin-top:40px}
+#v-loading{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
+.sw{font-size:11px;color:rgba(201,168,76,.55);margin-top:5px}
+/* iOS install hint */
+.ios-hint{background:#1a1400;border:1px solid rgba(201,168,76,.3);border-radius:12px;padding:14px 16px;margin:16px 0;font-size:12px;color:var(--muted);line-height:1.7;display:none}
+.ios-hint.show{display:block}
+@media(max-width:600px){
+  .hdr-in{padding:0 14px}.auth-box{padding:30px 20px}
+  .nbtn .nt{display:none}.uname{display:none}
+}
+/* Safe area for iPhone notch */
+@supports(padding:max(0px)){
+  .hdr-in{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env(safe-area-inset-right))}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="v-loading" class="view active">
+  <div class="spin"></div>
+  <div style="color:var(--muted);font-size:13px;animation:pulse 1.5s ease infinite" id="load-txt">กำลังตรวจสอบการเข้าสู่ระบบ…</div>
+</div>
+
+<!-- AUTH -->
+<div id="v-auth" class="view">
+  <div class="auth-wrap">
+    <div class="auth-box fu">
+      <!-- Login -->
+      <div id="fl">
+        <div style="text-align:center;margin-bottom:30px">
+          <div class="df" style="font-size:34px;margin-bottom:6px"><span style="color:var(--gold)">BIZ</span><span style="font-weight:300">PRO</span></div>
+          <div style="font-size:13px;color:var(--muted)">Digital Business Hub</div>
+        </div>
+        <div class="fg"><label class="flabel">อีเมล</label><input id="li-e" type="email" class="finput" placeholder="your@email.com" autocomplete="email" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+        <div class="fg"><label class="flabel">รหัสผ่าน</label><input id="li-p" type="password" class="finput" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+          <input type="checkbox" id="rememberMe" checked style="accent-color:var(--gold);width:16px;height:16px;cursor:pointer"/>
+          <label for="rememberMe" style="font-size:13px;color:var(--muted);cursor:pointer">จดจำการเข้าสู่ระบบ</label>
+        </div>
+        <div id="li-err" class="ferr"></div>
+        <button class="btn btn-g" style="width:100%;margin-bottom:14px;padding:13px" onclick="doLogin()">เข้าสู่ระบบ</button>
+        <div class="div"></div>
+        <div style="text-align:center"><span style="color:var(--muted);font-size:13px">ยังไม่มีบัญชี? </span><button class="btn-txt" style="color:var(--gold)" onclick="swF('r')">สมัครสมาชิก</button></div>
+
+        <!-- iOS install hint on login screen -->
+        <div class="ios-hint" id="ios-hint-auth">
+          📱 <strong style="color:var(--gold)">ติดตั้งเป็น App บน iPhone/iPad:</strong><br>
+          กด <strong>⎙ Share</strong> → <strong>Add to Home Screen</strong> → <strong>Add</strong>
+        </div>
+      </div>
+
+      <!-- Register -->
+      <div id="fr" style="display:none">
+        <div style="text-align:center;margin-bottom:26px">
+          <div class="df" style="font-size:24px;margin-bottom:4px">สมัครสมาชิก</div>
+          <div style="font-size:13px;color:var(--muted)">สร้างบัญชีใหม่ · จำการ Login อัตโนมัติ</div>
+        </div>
+        <div class="fg"><label class="flabel">ชื่อ-นามสกุล</label><input id="rg-n" type="text" class="finput" placeholder="ชื่อ นามสกุล" autocomplete="name"/></div>
+        <div class="fg"><label class="flabel">ตำแหน่ง / แผนก</label><input id="rg-pos" type="text" class="finput" placeholder="เช่น Sales Manager"/></div>
+        <div class="fg"><label class="flabel">อีเมล</label><input id="rg-e" type="email" class="finput" placeholder="your@email.com" autocomplete="email"/></div>
+        <div class="fg"><label class="flabel">รหัสผ่าน (อย่างน้อย 6 ตัว)</label><input id="rg-p" type="password" class="finput" placeholder="••••••••" autocomplete="new-password"/></div>
+        <div id="rg-err" class="ferr"></div>
+        <button class="btn btn-g" style="width:100%;margin-bottom:14px;padding:13px" onclick="doRegister()">สมัครสมาชิก</button>
+        <div class="div"></div>
+        <div style="text-align:center"><span style="color:var(--muted);font-size:13px">มีบัญชีแล้ว? </span><button class="btn-txt" style="color:var(--gold)" onclick="swF('l')">เข้าสู่ระบบ</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="v-main" class="view">
+
+  <!-- Install Banner (Android/Desktop) -->
+  <div id="install-banner">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:20px">📲</span>
+      <div>
+        <div style="font-size:13px;font-weight:500;color:var(--text)">ติดตั้ง BizPro เป็น App</div>
+        <div style="font-size:11px;color:var(--muted)">ใช้งานได้เหมือน App จริง · ไม่ต้องเปิด Browser</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-shrink:0">
+      <button class="btn btn-g" style="padding:8px 16px;font-size:12px" onclick="doInstall()">ติดตั้ง</button>
+      <button class="mc" onclick="g('install-banner').classList.remove('show')" style="font-size:18px;color:var(--muted)">✕</button>
+    </div>
+  </div>
+
+  <header class="hdr">
+    <div class="hdr-in">
+      <a class="logo" onclick="openTab('sc')"><span class="g">BIZ</span><span class="w">PRO</span></a>
+      <nav class="nav">
+        <button class="nbtn on" id="n-sc"  onclick="openTab('sc')">◈ <span class="nt">Showcase</span></button>
+        <button class="nbtn"    id="n-mc"  onclick="openTab('mc')">🪪 <span class="nt">นามบัตรของฉัน</span></button>
+        <button class="nbtn"    id="n-adm" onclick="openTab('adm')" style="display:none">⚙ <span class="nt">Admin</span></button>
+        <div class="nsep"></div>
+        <div class="ubadge">
+          <div class="uav" id="h-av">U</div>
+          <span class="uname" id="h-nm" style="font-size:13px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">User</span>
+          <button class="btn-txt" style="color:var(--muted);font-size:12px" onclick="doLogout()">ออก</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- SHOWCASE -->
+  <div id="t-sc" class="tab active">
+    <div class="wrap">
+      <div class="hero fu">
+        <div style="font-size:11px;letter-spacing:3px;color:var(--gold);margin-bottom:16px;text-transform:uppercase">Digital Business Hub</div>
+        <h1>Business<br><em style="color:var(--gold);font-style:italic">Materials</em></h1>
+        <div class="hero-line"></div>
+        <p>ดูและดาวน์โหลดเอกสารธุรกิจ<br>พร้อมแชร์ได้ทุกแพลตฟอร์ม</p>
+      </div>
+      <div style="padding:0 0 24px">
+        <div class="fu" style="margin-bottom:28px"><span class="lbl">เอกสารบริษัท</span><div class="df" style="font-size:30px;font-weight:300">Company Documents</div></div>
+        <div class="grid" id="sc-docs"></div>
+      </div>
+      <div style="padding:0 0 60px">
+        <div class="div" style="margin-bottom:32px"></div>
+        <div class="fu" style="margin-bottom:28px"><span class="lbl">ทีมงาน</span><div class="df" style="font-size:30px;font-weight:300">Business Cards</div></div>
+        <div class="grid" id="sc-cards"></div>
+        <div id="sc-empty" style="display:none;text-align:center;padding:60px 0;color:var(--muted)">ยังไม่มีนามบัตร · สมาชิกสามารถอัปโหลดนามบัตรได้</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MY CARD -->
+  <div id="t-mc" class="tab">
+    <div class="wrap-md" style="padding:48px 24px 80px">
+      <div class="fu" style="margin-bottom:36px">
+        <span class="lbl">จัดการนามบัตร</span>
+        <div class="df" style="font-size:38px;font-weight:300">นามบัตรของฉัน</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:6px">PDF · รูปภาพ (แนะนำไม่เกิน 1 MB)</div>
+      </div>
+      <div id="mc-cur" class="card fu1" style="padding:28px;display:none;margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+          <div class="uav lg" id="mc-av">U</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:15px;font-weight:500" id="mc-nm"></div>
+            <div style="font-size:12px;color:var(--muted)" id="mc-pos2"></div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn-gh" onclick="prevMy()">ดูตัวอย่าง</button>
+            <button class="btn-gh" onclick="shareMy()">แชร์ ↗</button>
+            <button class="btn-r" onclick="delMC()">ลบ</button>
+          </div>
+        </div>
+        <div class="fbar">
+          <span style="font-size:24px" id="mc-ico">📋</span>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="mc-fn"></div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px" id="mc-fs"></div>
+          </div>
+          <div class="fext" id="mc-ext">FILE</div>
+        </div>
+      </div>
+      <div class="card fu2" style="padding:28px">
+        <div style="font-size:13px;color:var(--muted);margin-bottom:14px" id="mc-lbl">อัปโหลดนามบัตรของคุณ</div>
+        <div id="mc-prog" style="display:none;margin-bottom:14px">
+          <div style="font-size:13px;color:var(--gold);margin-bottom:10px">กำลังบันทึก <span id="mc-pct">0</span>%</div>
+          <div class="ptrack"><div class="pbar" id="mc-pb" style="width:0%"></div></div>
+        </div>
+        <label class="uzone" id="mc-zone" ondragover="dov(event,'mc-zone')" ondragleave="dol('mc-zone')" ondrop="drop(event,'mc')">
+          <input type="file" accept="application/pdf,image/*" style="display:none" onchange="upMC(this.files[0])">
+          <div style="font-size:30px;margin-bottom:10px;color:var(--gold);opacity:.5">+</div>
+          <div style="font-size:14px;color:var(--text);margin-bottom:5px">วางไฟล์ที่นี่ หรือคลิกเพื่อเลือก</div>
+          <div style="font-size:12px;color:var(--muted)">PDF · JPG · PNG</div>
+          <div class="sw">⚡ แนะนำไม่เกิน 1 MB</div>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <div id="t-adm" class="tab">
+    <div class="wrap-md" style="padding:48px 24px 90px">
+      <div class="fu" style="margin-bottom:40px">
+        <span class="lbl">Admin Panel</span>
+        <div class="df" style="font-size:38px;font-weight:300">จัดการเนื้อหา</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:6px">Company Profile และ Brochure ใช้ข้อมูลเดียวกันสำหรับทุกคน</div>
+      </div>
+      <!-- Company Profile -->
+      <div class="card fu" style="padding:28px;margin-bottom:18px">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:18px">
+          <div><span class="lbl">เอกสารบริษัท</span><div class="df" style="font-size:26px;font-weight:400">Company Profile</div></div>
+          <div id="cp-acts" style="display:none;gap:8px;flex-wrap:wrap">
+            <button class="btn-gh" onclick="prevDoc('cp')">ดูตัวอย่าง</button>
+            <button class="btn-gh" onclick="shareDoc('cp')">แชร์ ↗</button>
+            <button class="btn-r" onclick="delDoc('cp')">ลบ</button>
+          </div>
+        </div>
+        <div class="fbar" id="cp-bar" style="display:none">
+          <span style="font-size:24px" id="cp-ico">📋</span>
+          <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="cp-fn"></div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="cp-fs"></div></div>
+        </div>
+        <div id="cp-prog" style="display:none;margin-bottom:14px">
+          <div style="font-size:13px;color:var(--gold);margin-bottom:10px">กำลังบันทึก <span id="cp-pct">0</span>%</div>
+          <div class="ptrack"><div class="pbar" id="cp-pb" style="width:0%"></div></div>
+        </div>
+        <label class="uzone" id="cp-zone" ondragover="dov(event,'cp-zone')" ondragleave="dol('cp-zone')" ondrop="drop(event,'cp')">
+          <input type="file" accept="application/pdf,image/*" style="display:none" onchange="upDoc('cp',this.files[0])">
+          <div style="font-size:28px;margin-bottom:8px;color:var(--gold);opacity:.5">+</div>
+          <div style="font-size:14px;color:var(--text);margin-bottom:5px" id="cp-lbl">อัปโหลดไฟล์</div>
+          <div style="font-size:12px;color:var(--muted)">PDF · JPG · PNG</div>
+          <div class="sw">⚡ แนะนำไม่เกิน 1 MB</div>
+        </label>
+      </div>
+      <!-- Brochure -->
+      <div class="card fu1" style="padding:28px;margin-bottom:28px">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:18px">
+          <div><span class="lbl">สื่อการตลาด</span><div class="df" style="font-size:26px;font-weight:400">Brochure</div></div>
+          <div id="br-acts" style="display:none;gap:8px;flex-wrap:wrap">
+            <button class="btn-gh" onclick="prevDoc('br')">ดูตัวอย่าง</button>
+            <button class="btn-gh" onclick="shareDoc('br')">แชร์ ↗</button>
+            <button class="btn-r" onclick="delDoc('br')">ลบ</button>
+          </div>
+        </div>
+        <div class="fbar" id="br-bar" style="display:none">
+          <span style="font-size:24px" id="br-ico">📋</span>
+          <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="br-fn"></div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="br-fs"></div></div>
+        </div>
+        <div id="br-prog" style="display:none;margin-bottom:14px">
+          <div style="font-size:13px;color:var(--gold);margin-bottom:10px">กำลังบันทึก <span id="br-pct">0</span>%</div>
+          <div class="ptrack"><div class="pbar" id="br-pb" style="width:0%"></div></div>
+        </div>
+        <label class="uzone" id="br-zone" ondragover="dov(event,'br-zone')" ondragleave="dol('br-zone')" ondrop="drop(event,'br')">
+          <input type="file" accept="application/pdf,image/*" style="display:none" onchange="upDoc('br',this.files[0])">
+          <div style="font-size:28px;margin-bottom:8px;color:var(--gold);opacity:.5">+</div>
+          <div style="font-size:14px;color:var(--text);margin-bottom:5px" id="br-lbl">อัปโหลดไฟล์</div>
+          <div style="font-size:12px;color:var(--muted)">PDF · JPG · PNG</div>
+          <div class="sw">⚡ แนะนำไม่เกิน 1 MB</div>
+        </label>
+      </div>
+      <!-- Users -->
+      <div class="card fu2" style="padding:28px">
+        <div style="margin-bottom:20px"><span class="lbl">สมาชิกทั้งหมด</span><div class="df" style="font-size:24px;font-weight:400">Team Members</div></div>
+        <div id="adm-users"><div style="color:var(--muted);font-size:13px;animation:pulse 1.5s ease infinite">กำลังโหลด…</div></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="df" style="font-size:20px;color:var(--gold);margin-bottom:8px">BIZPRO</div>
+    <div style="font-size:12px;color:var(--muted)">Company Profile · Brochure · Business Card</div>
+    <div style="font-size:11px;color:var(--dim);margin-top:8px" id="install-hint-footer"></div>
+  </footer>
+</div>
+
+<!-- PREVIEW MODAL -->
+<div id="m-pv" class="mo">
+  <div class="mbox">
+    <div class="mhdr">
+      <div><div class="df" style="font-size:22px;color:var(--gold)" id="pv-t"></div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="pv-fn"></div></div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="btn-gh" onclick="pv2sh()">↗ แชร์</button>
+        <button class="btn btn-g" onclick="dlCur()">↓ ดาวน์โหลด</button>
+        <button class="mc" onclick="closePV()">✕</button>
+      </div>
+    </div>
+    <div class="mbody" id="pv-body"></div>
+  </div>
+</div>
+
+<!-- SHARE MODAL -->
+<div id="m-sh" class="mo">
+  <div class="mbox mbox-sm">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:26px">
+      <div><span class="lbl">แชร์ไฟล์</span><div class="df" style="font-size:26px;color:var(--gold)" id="sh-t"></div></div>
+      <button class="mc" onclick="closeSH()">✕</button>
+    </div>
+    <div style="display:flex;justify-content:center;margin-bottom:26px">
+      <div style="padding:14px;background:#111;border-radius:16px;border:1px solid var(--border)">
+        <div id="sh-qr" style="width:176px;height:176px;display:flex;align-items:center;justify-content:center">
+          <div style="color:var(--muted);font-size:12px;animation:pulse 1.5s ease infinite">กำลังโหลด…</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-g" style="width:100%;margin-bottom:12px;padding:13px" onclick="dlCur()">↓ ดาวน์โหลดไฟล์</button>
+    <div class="div"></div>
+    <div style="font-size:11px;color:var(--muted);text-align:center;line-height:1.9">iOS · Android · Windows · macOS · Web</div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<!-- SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-database-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* ══ CONFIG ══════════════════════════════════════ */
+const FB = {
+  apiKey:            "AIzaSyBErsdboNThMZOLoJdN8Mf3lDJq80DuxaE",
+  authDomain:        "business-infos-155f8.firebaseapp.com",
+  databaseURL:       "https://business-infos-155f8-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:         "business-infos-155f8",
+  storageBucket:     "business-infos-155f8.firebasestorage.app",
+  messagingSenderId: "752710011890",
+  appId:             "1:752710011890:web:da84ae37d0732c4e7f396b"
+};
+const ADMINS = ["tom.vsn.91@gmail.com"];
+const MAX_B  = 1.5 * 1024 * 1024;
+
+/* ══ FIREBASE ════════════════════════════════════ */
+firebase.initializeApp(FB);
+const auth = firebase.auth();
+const db   = firebase.database();
+
+// Timeout fallback — ถ้า Firebase ไม่ตอบใน 8 วินาที
+setTimeout(() => { if(!_done) { _done=true; showV('auth'); } }, 4000);
+
+/* PWA manifest removed */
+
+/* ══ PWA INSTALL ═════════════════════════════════ */
+let deferredInstall = null;
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+const isInStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredInstall = e;
+  if (!isInStandalone) {
+    g('install-banner').classList.add('show');
+    g('install-hint-footer').textContent = '';
+  }
+});
+
+function doInstall() {
+  if (!deferredInstall) return;
+  deferredInstall.prompt();
+  deferredInstall.userChoice.then(r => {
+    if (r.outcome === 'accepted') { g('install-banner').classList.remove('show'); toast('✓ ติดตั้ง BizPro สำเร็จ!'); }
+    deferredInstall = null;
+  });
+}
+
+// Show iOS hint
+if (isIOS && !isInStandalone) {
+  g('ios-hint-auth').classList.add('show');
+  g('install-hint-footer').textContent = '📱 iPhone/iPad: กด Share → Add to Home Screen';
+}
+
+/* ══ STATE ════════════════════════════════════════ */
+let me=null, meD=null, isAdm=false;
+let pvF=null, pvTitle='';
+let cache={};
+let myF=null;
+
+/* ══ AUTH ═════════════════════════════════════════ */
+let _done = false;
+function goAuth(u) {
+  if (_done) return; _done = true;
+  if (u) { me=u; isAdm=ADMINS.includes(u.email); loadMe().then(boot).catch(()=>{ me=null; showV('auth'); }); }
+  else { me=null; meD=null; isAdm=false; showV('auth'); }
+}
+auth.onAuthStateChanged(goAuth);
+
+function showV(v){ document.querySelectorAll('.view').forEach(e=>e.classList.remove('active')); g('v-'+v).classList.add('active'); }
+function openTab(t){ document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active')); document.querySelectorAll('.nbtn').forEach(e=>e.classList.remove('on')); g('t-'+t).classList.add('active'); const n=g('n-'+t); if(n)n.classList.add('on'); }
+function swF(f){ g('fl').style.display=f==='l'?'':'none'; g('fr').style.display=f==='r'?'':'none'; }
+
+async function doLogin(){
+  const e=g('li-e').value.trim(), p=g('li-p').value, er=g('li-err'); er.style.display='none';
+  const persist = g('rememberMe').checked
+    ? firebase.auth.Auth.Persistence.LOCAL
+    : firebase.auth.Auth.Persistence.SESSION;
+  try{
+    await auth.setPersistence(persist);
+    await auth.signInWithEmailAndPassword(e,p);
+  } catch(x){ er.textContent=aErr(x.code); er.style.display='block'; }
+}
+async function doRegister(){
+  const n=g('rg-n').value.trim(), pos=g('rg-pos').value.trim(), e=g('rg-e').value.trim(), p=g('rg-p').value, er=g('rg-err'); er.style.display='none';
+  if(!n){ er.textContent='กรุณาใส่ชื่อ'; er.style.display='block'; return; }
+  try{
+    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    const c=await auth.createUserWithEmailAndPassword(e,p);
+    await db.ref('users/'+c.user.uid).set({ name:n, pos, email:e, role:ADMINS.includes(e)?'admin':'user', createdAt:Date.now() });
+  } catch(x){ er.textContent=aErr(x.code); er.style.display='block'; }
+}
+async function doLogout(){
+  if(!confirm('ออกจากระบบ?')) return;
+  await auth.signOut();
+}
+function aErr(c){ return({
+  'auth/invalid-credential':'อีเมลหรือรหัสผ่านไม่ถูกต้อง',
+  'auth/user-not-found':'ไม่พบบัญชีนี้',
+  'auth/wrong-password':'รหัสผ่านไม่ถูกต้อง',
+  'auth/email-already-in-use':'อีเมลนี้ถูกใช้แล้ว',
+  'auth/weak-password':'รหัสผ่านอย่างน้อย 6 ตัวอักษร',
+  'auth/invalid-email':'รูปแบบอีเมลไม่ถูกต้อง'
+})[c]||'เกิดข้อผิดพลาด กรุณาลองใหม่'; }
+
+/* ══ BOOT ═════════════════════════════════════════ */
+async function loadMe(){
+  const s=await db.ref('users/'+me.uid).once('value');
+  if(s.exists()){ meD=s.val(); }
+  else{
+    const nm=me.displayName||me.email.split('@')[0];
+    meD={name:nm,pos:'',email:me.email,role:'user',createdAt:Date.now()};
+    await db.ref('users/'+me.uid).set(meD);
+  }
+}
+function boot(){
+  const nm=meD?.name||me.email, init=nm.charAt(0).toUpperCase();
+  g('h-av').textContent=init; g('h-nm').textContent=nm;
+  g('mc-av').textContent=init; g('mc-nm').textContent=nm; g('mc-pos2').textContent=meD?.pos||'';
+  if(isAdm) g('n-adm').style.display='';
+  showV('main'); openTab('sc');
+  loadSC(); loadMC(); if(isAdm) loadAdm();
+  toast('สวัสดี ' + nm + ' 👋');
+}
+
+/* ══ SHOWCASE ═════════════════════════════════════ */
+async function loadSC(){
+  g('sc-docs').innerHTML=''; g('sc-cards').innerHTML='';
+  const DOCS=[{k:'cp',en:'Company Profile',th:'โปรไฟล์บริษัท'},{k:'br',en:'Brochure',th:'โบรชัวร์'}];
+  for(const d of DOCS){
+    const s=await db.ref('docs/'+d.k).once('value');
+    const f=s.exists()?s.val():null; if(f) cache[d.k]=f;
+    g('sc-docs').appendChild(mkDocCard(d,f));
+  }
+  const cs=await db.ref('bizCards').once('value');
+  if(!cs.exists()){ g('sc-empty').style.display=''; g('sc-cards').style.display='none'; }
+  else{ g('sc-empty').style.display='none'; g('sc-cards').style.display='';
+    cs.forEach(c=>g('sc-cards').appendChild(mkBC(c.key,c.val()))); }
+}
+
+function mkDocCard(d,f){
+  const el=document.createElement('div'); el.className='card fu'; el.style.padding='24px';
+  const th=f?f.mimeType?.startsWith('image/')?`<img src="data:${f.mimeType};base64,${f.base64}" style="width:100%;height:100%;object-fit:cover">`
+    :`<div style="text-align:center"><div style="font-size:52px;margin-bottom:10px">${ico(f.mimeType)}</div><div style="font-size:12px;color:var(--gold)">${sh(f.name)}</div></div>`
+    :`<div style="text-align:center;opacity:.3"><div style="font-size:52px">📄</div><div style="font-size:12px;color:var(--muted);margin-top:8px">ยังไม่มีไฟล์</div></div>`;
+  const bd=f?`<div class="tbadge">${(f.mimeType?.split('/')[1]||'').toUpperCase()}</div>`:'';
+  const ac=f?`<div style="display:flex;gap:8px"><button class="btn btn-g" style="flex:1" onclick="openPV('${d.k}','${d.en}')">ดูตัวอย่าง</button><button class="btn-ic" onclick="dlDoc('${d.k}')">↓</button><button class="btn-ic" onclick="shareDoc('${d.k}')">↗</button></div>`
+    :`<div style="text-align:center;color:var(--dim);font-size:12px;padding:12px 0;border-top:1px solid var(--border)">ยังไม่มีไฟล์</div>`;
+  el.innerHTML=`<div class="thumb">${th}${bd}</div><span class="lbl">${d.th}</span><div class="df" style="font-size:24px;font-weight:400;margin-bottom:4px">${d.en}</div><div style="font-size:12px;color:var(--muted);margin-bottom:16px">${f?sz(f.size):'ไม่มีไฟล์'}</div>${ac}`;
+  return el;
+}
+function mkBC(uid,f){
+  const el=document.createElement('div'); el.className='card fu'; el.style.padding='24px';
+  const init=(f.userName||'?').charAt(0).toUpperCase();
+  const th=f.mimeType?.startsWith('image/')?`<img src="data:${f.mimeType};base64,${f.base64}" style="width:100%;height:100%;object-fit:cover">`
+    :`<div style="text-align:center"><div style="font-size:52px;margin-bottom:10px">${ico(f.mimeType)}</div><div style="font-size:12px;color:var(--gold)">${sh(f.name)}</div></div>`;
+  el.innerHTML=`<div class="thumb">${th}<div class="tbadge">${(f.mimeType?.split('/')[1]||'FILE').toUpperCase()}</div></div>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+    <div class="uav lg">${init}</div>
+    <div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${es(f.userName||'')}</div><div style="font-size:12px;color:var(--muted)">${es(f.userPos||'')}</div></div>
+  </div>
+  <div style="display:flex;gap:8px"><button class="btn btn-g" style="flex:1" onclick="openBCPV('${uid}')">ดูตัวอย่าง</button><button class="btn-ic" onclick="dlBC('${uid}')">↓</button><button class="btn-ic" onclick="shBC('${uid}')">↗</button></div>`;
+  return el;
+}
+
+/* ══ MY CARD ══════════════════════════════════════ */
+async function loadMC(){
+  const s=await db.ref('bizCards/'+me.uid).once('value');
+  if(s.exists()){ myF=s.val(); showMCUI(myF); } else g('mc-cur').style.display='none';
+}
+function showMCUI(f){
+  g('mc-cur').style.display=''; g('mc-fn').textContent=f.name; g('mc-fs').textContent=sz(f.size)+' · '+dt(f.at);
+  g('mc-ico').textContent=ico(f.mimeType); g('mc-ext').textContent=(f.mimeType?.split('/')[1]||'FILE').toUpperCase();
+  g('mc-lbl').textContent='เปลี่ยนนามบัตร';
+}
+function upMC(file){
+  if(!file) return;
+  if(file.size>MAX_B){ toast('ไฟล์ใหญ่เกิน '+sz(MAX_B),'err'); return; }
+  progAnim('mc',async()=>{
+    const b64=await toB64(file);
+    const f={name:file.name,mimeType:file.type,size:file.size,base64:b64,userName:meD?.name||me.email,userPos:meD?.pos||'',at:Date.now()};
+    await db.ref('bizCards/'+me.uid).set(f); myF=f; showMCUI(f); toast('✓ บันทึกนามบัตรสำเร็จ'); loadSC();
+  });
+}
+async function delMC(){
+  if(!confirm('ลบนามบัตรของคุณ?')) return;
+  await db.ref('bizCards/'+me.uid).remove(); myF=null;
+  g('mc-cur').style.display='none'; g('mc-lbl').textContent='อัปโหลดนามบัตรของคุณ'; toast('ลบนามบัตรเรียบร้อย'); loadSC();
+}
+function prevMy(){ if(myF) openPVdirect(myF,(meD?.name||'')+' — Business Card'); }
+function shareMy(){ if(myF) openSH(myF,(meD?.name||'')+' — Business Card'); }
+
+/* ══ ADMIN ════════════════════════════════════════ */
+async function loadAdm(){
+  for(const k of['cp','br']){
+    const s=await db.ref('docs/'+k).once('value');
+    if(s.exists()){ cache[k]=s.val(); updAdm(k,s.val()); }
+  }
+  loadUsers();
+}
+function updAdm(k,f){
+  g(k+'-acts').style.display=f?'flex':'none'; g(k+'-bar').style.display=f?'flex':'none';
+  if(f){ g(k+'-ico').textContent=ico(f.mimeType); g(k+'-fn').textContent=f.name; g(k+'-fs').textContent=sz(f.size)+' · '+dt(f.at); g(k+'-lbl').textContent='เปลี่ยนไฟล์'; }
+  else g(k+'-lbl').textContent='อัปโหลดไฟล์';
+}
+function upDoc(k,file){
+  if(!file||!isAdm) return;
+  if(file.size>MAX_B){ toast('ไฟล์ใหญ่เกิน '+sz(MAX_B),'err'); return; }
+  progAnim(k,async()=>{
+    const b64=await toB64(file);
+    const f={name:file.name,mimeType:file.type,size:file.size,base64:b64,at:Date.now()};
+    await db.ref('docs/'+k).set(f); cache[k]=f; updAdm(k,f); toast('✓ บันทึกสำเร็จ'); loadSC();
+  });
+}
+async function delDoc(k){
+  if(!confirm('ลบไฟล์นี้?')||!isAdm) return;
+  await db.ref('docs/'+k).remove(); delete cache[k]; updAdm(k,null); toast('ลบไฟล์เรียบร้อย'); loadSC();
+}
+async function loadUsers(){
+  const el=g('adm-users'); el.innerHTML='';
+  const s=await db.ref('users').once('value');
+  if(!s.exists()){ el.innerHTML='<div style="color:var(--muted);font-size:13px">ไม่มีสมาชิก</div>'; return; }
+  s.forEach(c=>{ const u=c.val(); const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)';
+    row.innerHTML=`<div class="uav" style="width:36px;height:36px;font-size:13px;flex-shrink:0">${(u.name||'?').charAt(0).toUpperCase()}</div><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:500">${es(u.name||'—')}</div><div style="font-size:12px;color:var(--muted)">${es(u.email||'')}${u.pos?' · '+es(u.pos):''}</div></div><span class="rb ${u.role==='admin'?'admin':'user'}">${u.role==='admin'?'Admin':'User'}</span>`;
+    el.appendChild(row); });
+}
+
+/* ══ PREVIEW ══════════════════════════════════════ */
+function openPV(k,title){ const f=cache[k]; if(f) openPVdirect(f,title); }
+async function openBCPV(uid){ const s=await db.ref('bizCards/'+uid).once('value'); if(s.exists()) openPVdirect(s.val(),s.val().userName+' — Business Card'); }
+function openPVdirect(f,title){
+  pvF=f; pvTitle=title; g('pv-t').textContent=title; g('pv-fn').textContent=f.name;
+  const body=g('pv-body'); body.innerHTML=''; const src=`data:${f.mimeType};base64,${f.base64}`;
+  if(f.mimeType?.startsWith('image/'))      body.innerHTML=`<img src="${src}" style="max-width:100%;max-height:75vh;object-fit:contain;border-radius:8px">`;
+  else if(f.mimeType==='application/pdf')  body.innerHTML=`<iframe src="${src}" style="width:100%;height:75vh;border:none;border-radius:8px"></iframe>`;
+  else body.innerHTML=`<div style="text-align:center;color:var(--muted)"><div style="font-size:64px;margin-bottom:20px">${ico(f.mimeType)}</div><div>${es(f.name)}</div></div>`;
+  g('m-pv').classList.add('open');
+}
+function closePV(){ g('m-pv').classList.remove('open'); g('pv-body').innerHTML=''; }
+function pv2sh(){ closePV(); if(pvF) openSH(pvF,pvTitle); }
+function dlCur(){ if(pvF) dlB64(pvF.base64,pvF.name,pvF.mimeType); }
+function dlDoc(k){ const f=cache[k]; if(f) dlB64(f.base64,f.name,f.mimeType); }
+async function dlBC(uid){ const s=await db.ref('bizCards/'+uid).once('value'); if(s.exists()){ const f=s.val(); dlB64(f.base64,f.name,f.mimeType); } }
+function prevDoc(k){ openPV(k,k==='cp'?'Company Profile':'Brochure'); }
+function shareDoc(k){ const f=cache[k]; if(f) openSH(f,k==='cp'?'Company Profile':'Brochure'); }
+async function shBC(uid){ const s=await db.ref('bizCards/'+uid).once('value'); if(s.exists()) openSH(s.val(),s.val().userName+' — Business Card'); }
+
+/* ══ SHARE ════════════════════════════════════════ */
+function openSH(f,title){
+  pvF=f; pvTitle=title; g('sh-t').textContent=title;
+  const qrEl=g('sh-qr'); qrEl.innerHTML='';
+  if(window.QRCode) new QRCode(qrEl,{text:location.href,width:176,height:176,colorDark:'#C9A84C',colorLight:'#111111',correctLevel:QRCode.CorrectLevel.H});
+  g('m-sh').classList.add('open');
+}
+function closeSH(){ g('m-sh').classList.remove('open'); }
+
+/* ══ DRAG DROP ════════════════════════════════════ */
+function dov(e,z){ e.preventDefault(); g(z)?.classList.add('dov'); }
+function dol(z){ g(z)?.classList.remove('dov'); }
+function drop(e,t){ e.preventDefault(); document.querySelectorAll('.uzone').forEach(z=>z.classList.remove('dov')); const file=e.dataTransfer.files[0]; if(!file) return; if(t==='mc') upMC(file); else upDoc(t,file); }
+
+/* ══ PROGRESS ═════════════════════════════════════ */
+function progAnim(k,cb){
+  const prog=g(k+'-prog'), zone=g(k+'-zone');
+  if(prog) prog.style.display=''; if(zone) zone.style.pointerEvents='none';
+  let p=0; const iv=setInterval(()=>{ p=Math.min(p+12,88); setP(k,p); },100);
+  cb().then(()=>{ clearInterval(iv); setP(k,100);
+    setTimeout(()=>{ if(prog) prog.style.display='none'; if(zone){ zone.style.pointerEvents=''; const inp=zone.querySelector('input'); if(inp) inp.value=''; } },600);
+  }).catch(err=>{ clearInterval(iv); toast('เกิดข้อผิดพลาด: '+err.message,'err'); if(prog) prog.style.display='none'; if(zone) zone.style.pointerEvents=''; });
+}
+function setP(k,v){ const pb=g(k+'-pb'); if(pb) pb.style.width=v+'%'; const pt=g(k+'-pct'); if(pt) pt.textContent=v; }
+
+/* ══ TOAST ════════════════════════════════════════ */
+let tT; function toast(msg,type='ok'){ clearTimeout(tT); const el=g('toast'); el.textContent=msg; el.className=`toast ${type} show`; tT=setTimeout(()=>el.classList.remove('show'),3200); }
+
+/* ══ UTILS ════════════════════════════════════════ */
+const g  = id => document.getElementById(id);
+const es = s  => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const ico= m  => !m?'📄':m.startsWith('image/')?'🖼':m==='application/pdf'?'📋':m.startsWith('video/')?'🎬':'📄';
+const sh = s  => !s?'':s.length>22?s.slice(0,22)+'…':s;
+const sz = b  => !b?'':b<1048576?(b/1024).toFixed(1)+' KB':(b/1048576).toFixed(1)+' MB';
+const dt = t  => { if(!t) return''; return new Date(t).toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'}); };
+const toB64 = f => new Promise((res,rej)=>{ const r=new FileReader(); r.onload=e=>res(e.target.result.split(',')[1]); r.onerror=rej; r.readAsDataURL(f); });
+function dlB64(b64,name,mime){ const b=atob(b64),a=new Uint8Array(b.length); for(let i=0;i<b.length;i++) a[i]=b.charCodeAt(i); const url=URL.createObjectURL(new Blob([a],{type:mime})); Object.assign(document.createElement('a'),{href:url,download:name}).click(); setTimeout(()=>URL.revokeObjectURL(url),2000); }
+
+g('m-pv').addEventListener('click',function(e){ if(e.target===this) closePV(); });
+g('m-sh').addEventListener('click',function(e){ if(e.target===this) closeSH(); });
+</script>
+</body>
+</html>
